@@ -1,0 +1,60 @@
+Table users {
+  id int [unique, pk, not null]
+  username varchar(255) [not null]
+  password_hash varchar(255) [not null]
+  password_salt varchar(255) [not null]
+  created_at timestamp [default: 'now()']
+}
+
+Table users_info {
+  user_id int [ref: - users.id]
+  email varchar(255) [not null]
+  full_name varchar(255) [not null]
+  birth_date timestamp
+  gender genders
+  country_code int [ref: - countries.code]
+  updated_at timestamp
+}
+
+Table countries {
+  code int [pk]
+  name varchar(255)
+  can_ship bool [default: false]
+}
+
+Table products {
+  id int [unique, not null, pk]
+  name varchar(255) [not null]
+  price int [not null]
+  image varchar(255)
+  sizes sizes
+}
+
+Table orders {
+  user_id int [ref: - users.id]
+  product_id int [ref: - products.id]
+  purchased_at timestamp
+  shiped bool
+}
+
+Table reviews {
+  id int [unique, not null, pk]
+  product_id int [ref: - products.id]
+  user_id int [ref: - users.id]
+  review text [not null]
+}
+
+Enum sizes {
+  xs
+  s
+  m
+  l
+  xl
+  xxl
+}
+
+Enum genders {
+  male
+  female
+  other
+}
