@@ -10,6 +10,7 @@ Table users_info {
   user_id int [ref: - users.id]
   email varchar(255) [not null]
   full_name varchar(255) [not null]
+  tel varchar(50)
   birth_date timestamp
   gender genders
   country_code int [ref: - countries.code]
@@ -28,10 +29,11 @@ Table products {
   price int [not null]
   image varchar(255)
   sizes sizes
+  created_at timestamp [default: 'now()']
 }
 
 Table orders {
-  user_id int [ref: - users.id]
+  user_id int [ref: > users.id]
   product_id int [ref: - products.id]
   purchased_at timestamp
   shiped bool
@@ -39,9 +41,10 @@ Table orders {
 
 Table reviews {
   id int [unique, not null, pk]
-  product_id int [ref: - products.id]
-  user_id int [ref: - users.id]
+  product_id int [ref: < products.id]
+  user_id int [ref: > users.id]
   review text [not null]
+  created_at timestamp [default: 'now()']
 }
 
 Enum sizes {
