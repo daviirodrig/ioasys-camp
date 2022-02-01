@@ -2,7 +2,6 @@ import { timingSafeEqual } from "crypto";
 import { Buffer } from "buffer";
 
 class loginSystem {
-
   private comparePasswords(pass1: string, pass2: string): boolean {
     // Assume passwords are already hashed
 
@@ -17,8 +16,13 @@ class loginSystem {
 
   async findByLogin({ email, pass }) {
     const user = await this.repo.findOne({ where: { email } });
+    let hash = user?.password;
 
-    const compare = await this.comparePasswords(user.password, pass);
+    if (!user) {
+      hash = await bcrypt.hash(Math.random().toString(36), 8);
+    }
+
+    const compare = await this.comparePasswords(hash, pass);
 
     if (!compare) {
       throw new HttpException("Invalid credentials", HttpStatus.UNAUTHORIZED);
